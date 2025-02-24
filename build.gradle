@@ -41,6 +41,8 @@ dependencies {
     implementation "io.grpc:grpc-protobuf:${grpcVersion}"
     implementation "io.grpc:grpc-stub:${grpcVersion}"
 
+    annotationProcessor "jakarta.annotation:jakarta.annotation-api"
+
     // grpc 프로토콜 Protobuf 메시지 직렬화/역직렬화
     implementation "com.google.protobuf:protobuf-java-util:${protobufVersion}"
     implementation "com.google.protobuf:protobuf-java:${protobufVersion}"
