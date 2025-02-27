@@ -34,26 +34,36 @@ repositories {
 }
 
 dependencies {
+    // Spring
+    implementation 'org.springframework.boot:spring-boot-starter'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0'
+
+    // Jakarta EE
+    compileOnly 'org.apache.tomcat:annotations-api:6.0.53'
+
     // Grpc
     implementation 'net.devh:grpc-spring-boot-starter:3.1.0.RELEASE'
     implementation 'net.devh:grpc-client-spring-boot-starter:3.1.0.RELEASE'
     runtimeOnly "io.grpc:grpc-netty-shaded:${grpcVersion}"
     implementation "io.grpc:grpc-protobuf:${grpcVersion}"
     implementation "io.grpc:grpc-stub:${grpcVersion}"
+    implementation "io.grpc:grpc-core:${grpcVersion}"
 
-    // grpc 프로토콜 Protobuf 메시지 직렬화/역직렬화
+    // Grpc Protobuf 메시지 직렬화/역직렬화
     implementation "com.google.protobuf:protobuf-java-util:${protobufVersion}"
     implementation "com.google.protobuf:protobuf-java:${protobufVersion}"
 
-    compileOnly 'org.apache.tomcat:annotations-api:6.0.53'
+    // JSON 데이터 직렬화
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
+    implementation 'com.fasterxml.jackson.core:jackson-databind'
+    implementation group: 'com.hubspot.jackson', name: 'jackson-datatype-protobuf', version: '0.9.15'
 
-    implementation 'org.springframework.boot:spring-boot-starter'
-    implementation 'org.springframework.boot:spring-boot-starter-validation'
-    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0'
-
-    annotationProcessor 'org.projectlombok:lombok'
+    // Lombok
     compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
 
+    // MapStruct
     implementation 'org.mapstruct:mapstruct:1.6.0'
     annotationProcessor 'org.mapstruct:mapstruct-processor:1.6.0'
 
