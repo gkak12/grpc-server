@@ -17,10 +17,10 @@ public class GrpcServerController extends GrpcServerServiceGrpc.GrpcServerServic
     private final GrpcServerService grpcServerService;
 
     @Override
-    public void findGrpcServerDataList(GrpcServerRequest request, StreamObserver<GrpcServerResponse> responseObserver) {
+    public void findGrpcServerObjects(GrpcServerRequest request, StreamObserver<GrpcServerResponse> responseObserver) {
         log.info("findGrpcServerDataList");
 
-        responseObserver.onNext(grpcServerService.findGrpcServerDataList(request));
+        responseObserver.onNext(grpcServerService.findGrpcServerObjects(request));
         responseObserver.onCompleted();
     }
 }
