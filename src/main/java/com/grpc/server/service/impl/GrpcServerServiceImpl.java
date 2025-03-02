@@ -15,6 +15,8 @@ public class GrpcServerServiceImpl implements GrpcServerService {
 
     @Override
     public GrpcServerResponse findGrpcServerObjects(GrpcServerRequest request) {
+        log.info("grpc-server | findGrpcServerObjects request: {}", request);
+
         List<String> objects = Arrays.asList("obj1", "obj2", "obj3");
 
         return GrpcServerResponse
