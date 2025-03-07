@@ -5,5 +5,5 @@ import com.grpc.server.GrpcServerResponse;
 
 public interface GrpcServerService {
 
-    GrpcServerResponse findGrpcServerObjects(GrpcServerRequest request);
+    GrpcServerResponse findGrpcServerNames(GrpcServerRequest request);
 }

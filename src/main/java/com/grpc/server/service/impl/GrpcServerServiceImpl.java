@@ -14,16 +14,16 @@ import java.util.List;
 public class GrpcServerServiceImpl implements GrpcServerService {
 
     @Override
-    public GrpcServerResponse findGrpcServerObjects(GrpcServerRequest request) {
+    public GrpcServerResponse findGrpcServerNames(GrpcServerRequest request) {
         log.info("grpc-server | findGrpcServerObjects request: {}", request);
 
-        List<String> objects = Arrays.asList("obj1", "obj2", "obj3");
+        List<String> names = Arrays.asList("obj1", "obj2", "obj3");
 
         return GrpcServerResponse
                 .newBuilder()
                 .setStatusCode(200)
                 .setMessage("OK")
-                .addAllObjects(objects)
+                .addAllNames(names)
                 .build();
     }
 }
