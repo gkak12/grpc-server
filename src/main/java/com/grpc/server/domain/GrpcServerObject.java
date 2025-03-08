@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class GrpcServerObject {
+
     private Long seq;
     private String name;
     private boolean flag;

@@ -12,5 +12,6 @@ import org.mapstruct.*;
         componentModel = "spring"
 )
 public interface GrpcMapper {
+
     GrpcObject toGrpcObject(GrpcServerObject grpcServerObject);
 }
