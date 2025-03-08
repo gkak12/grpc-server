@@ -1,5 +1,6 @@
 package com.grpc.server.service.impl;
 
+import com.google.protobuf.Empty;
 import com.grpc.server.GrpcServerRequest;
 import com.grpc.server.GrpcServerResponse;
 import com.grpc.server.domain.GrpcServerObject;
@@ -34,8 +35,8 @@ public class GrpcServerServiceImpl implements GrpcServerService {
     }
 
     @Override
-    public GrpcServerResponse findGrpcServerObjects(GrpcServerRequest request) {
-        log.info("grpc-server | findGrpcServerObjects request: {}", request);
+    public GrpcServerResponse findGrpcServerObjects(Empty empty) {
+        log.info("grpc-server | findGrpcServerObjects request: empty");
 
         List<GrpcServerObject> objectList = Arrays.asList(  // 임시 하드코딩
             GrpcServerObject.builder().seq(1L).name("obj1").flag(true).build(),

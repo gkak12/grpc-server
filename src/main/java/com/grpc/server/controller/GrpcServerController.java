@@ -1,5 +1,6 @@
 package com.grpc.server.controller;
 
+import com.google.protobuf.Empty;
 import com.grpc.server.GrpcServerRequest;
 import com.grpc.server.GrpcServerResponse;
 import com.grpc.server.GrpcServerServiceGrpc;
@@ -25,10 +26,10 @@ public class GrpcServerController extends GrpcServerServiceGrpc.GrpcServerServic
     }
 
     @Override
-    public void findGrpcServerObjects(GrpcServerRequest request, StreamObserver<GrpcServerResponse> responseObserver) {
+    public void findGrpcServerObjects(Empty empty, StreamObserver<GrpcServerResponse> responseObserver) {
         log.info("grpc-server | GrpcServerController findGrpcServerObjects is called.");
 
-        responseObserver.onNext(grpcServerService.findGrpcServerObjects(request));
+        responseObserver.onNext(grpcServerService.findGrpcServerObjects(empty));
         responseObserver.onCompleted();
     }
 }
