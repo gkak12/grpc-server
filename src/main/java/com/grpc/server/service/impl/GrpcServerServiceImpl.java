@@ -21,6 +21,18 @@ public class GrpcServerServiceImpl implements GrpcServerService {
     private final GrpcMapper grpcMapper;
 
     @Override
+    public GrpcServerResponse findGrpcServerName(GrpcServerRequest request) {
+        log.info("grpc-server | findGrpcServerName request: {}", request);
+
+        return GrpcServerResponse
+                .newBuilder()
+                .setStatusCode(200)
+                .setMessage("OK")
+                .setName("obj1")
+                .build();
+    }
+
+    @Override
     public GrpcServerResponse findGrpcServerNames(GrpcServerRequest request) {
         log.info("grpc-server | findGrpcServerNames request: {}", request);
 

@@ -18,6 +18,14 @@ public class GrpcServerController extends GrpcServerServiceGrpc.GrpcServerServic
     private final GrpcServerService grpcServerService;
 
     @Override
+    public void findGrpcServerName(GrpcServerRequest request, StreamObserver<GrpcServerResponse> responseObserver) {
+        log.info("grpc-server | GrpcServerController findGrpcServerName is called.");
+
+        responseObserver.onNext(grpcServerService.findGrpcServerName(request));
+        responseObserver.onCompleted();
+    }
+
+    @Override
     public void findGrpcServerNames(GrpcServerRequest request, StreamObserver<GrpcServerResponse> responseObserver) {
         log.info("grpc-server | GrpcServerController findGrpcServerNames is called.");
 
