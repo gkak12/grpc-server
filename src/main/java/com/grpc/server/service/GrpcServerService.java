@@ -6,7 +6,7 @@ import com.grpc.server.GrpcServerResponse;
 
 public interface GrpcServerService {
 
-    GrpcServerResponse findGrpcServerName(GrpcServerRequest request);
-    GrpcServerResponse findGrpcServerNames(GrpcServerRequest request);
-    GrpcServerResponse findGrpcServerObjects(Empty empty);
+    GrpcServerResponse findNameFromGrpcServer(GrpcServerRequest request);
+    GrpcServerResponse findNamesFromGrpcServer(GrpcServerRequest request);
+    GrpcServerResponse findObjectsFromGrpcServer(Empty empty);
 }

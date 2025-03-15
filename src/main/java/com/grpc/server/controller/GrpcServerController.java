@@ -18,26 +18,26 @@ public class GrpcServerController extends GrpcServerServiceGrpc.GrpcServerServic
     private final GrpcServerService grpcServerService;
 
     @Override
-    public void findGrpcServerName(GrpcServerRequest request, StreamObserver<GrpcServerResponse> responseObserver) {
+    public void findNameFromGrpcServer(GrpcServerRequest request, StreamObserver<GrpcServerResponse> responseObserver) {
         log.info("grpc-server | GrpcServerController findGrpcServerName is called.");
 
-        responseObserver.onNext(grpcServerService.findGrpcServerName(request));
+        responseObserver.onNext(grpcServerService.findNameFromGrpcServer(request));
         responseObserver.onCompleted();
     }
 
     @Override
-    public void findGrpcServerNames(GrpcServerRequest request, StreamObserver<GrpcServerResponse> responseObserver) {
+    public void findNamesFromGrpcServer(GrpcServerRequest request, StreamObserver<GrpcServerResponse> responseObserver) {
         log.info("grpc-server | GrpcServerController findGrpcServerNames is called.");
 
-        responseObserver.onNext(grpcServerService.findGrpcServerNames(request));
+        responseObserver.onNext(grpcServerService.findNamesFromGrpcServer(request));
         responseObserver.onCompleted();
     }
 
     @Override
-    public void findGrpcServerObjects(Empty empty, StreamObserver<GrpcServerResponse> responseObserver) {
+    public void findObjectsFromGrpcServer(Empty empty, StreamObserver<GrpcServerResponse> responseObserver) {
         log.info("grpc-server | GrpcServerController findGrpcServerObjects is called.");
 
-        responseObserver.onNext(grpcServerService.findGrpcServerObjects(empty));
+        responseObserver.onNext(grpcServerService.findObjectsFromGrpcServer(empty));
         responseObserver.onCompleted();
     }
 }

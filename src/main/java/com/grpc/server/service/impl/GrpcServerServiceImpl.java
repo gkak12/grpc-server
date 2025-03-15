@@ -21,7 +21,7 @@ public class GrpcServerServiceImpl implements GrpcServerService {
     private final GrpcMapper grpcMapper;
 
     @Override
-    public GrpcServerResponse findGrpcServerName(GrpcServerRequest request) {
+    public GrpcServerResponse findNameFromGrpcServer(GrpcServerRequest request) {
         log.info("grpc-server | findGrpcServerName request: {}", request);
 
         return GrpcServerResponse
@@ -33,7 +33,7 @@ public class GrpcServerServiceImpl implements GrpcServerService {
     }
 
     @Override
-    public GrpcServerResponse findGrpcServerNames(GrpcServerRequest request) {
+    public GrpcServerResponse findNamesFromGrpcServer(GrpcServerRequest request) {
         log.info("grpc-server | findGrpcServerNames request: {}", request);
 
         List<String> names = Arrays.asList("obj1", "obj2", "obj3"); // 임시 하드코딩
@@ -47,7 +47,7 @@ public class GrpcServerServiceImpl implements GrpcServerService {
     }
 
     @Override
-    public GrpcServerResponse findGrpcServerObjects(Empty empty) {
+    public GrpcServerResponse findObjectsFromGrpcServer(Empty empty) {
         log.info("grpc-server | findGrpcServerObjects request: empty");
 
         List<GrpcServerObject> objectList = Arrays.asList(  // 임시 하드코딩
