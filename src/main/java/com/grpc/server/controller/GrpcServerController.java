@@ -1,6 +1,7 @@
 package com.grpc.server.controller;
 
 import com.google.protobuf.Empty;
+import com.grpc.server.FileChunk;
 import com.grpc.server.GrpcServerRequest;
 import com.grpc.server.GrpcServerResponse;
 import com.grpc.server.GrpcServerServiceGrpc;
@@ -39,5 +40,12 @@ public class GrpcServerController extends GrpcServerServiceGrpc.GrpcServerServic
 
         responseObserver.onNext(grpcServerService.findObjectsFromGrpcServer(empty));
         responseObserver.onCompleted();
+    }
+
+    @Override
+    public void downloadFileFromGrpcServer(GrpcServerRequest request, StreamObserver<FileChunk> responseObserver) {
+        log.info("grpc-server | GrpcServerController downloadFileFromGrpcServer is called.");
+
+        grpcServerService.downloadFileFromGrpcServer(request, responseObserver);
     }
 }

@@ -1,15 +1,20 @@
 package com.grpc.server.service.impl;
 
+import com.google.protobuf.ByteString;
 import com.google.protobuf.Empty;
+import com.grpc.server.FileChunk;
 import com.grpc.server.GrpcServerRequest;
 import com.grpc.server.GrpcServerResponse;
 import com.grpc.server.domain.GrpcServerObject;
 import com.grpc.server.mapper.GrpcMapper;
 import com.grpc.server.service.GrpcServerService;
+import io.grpc.stub.StreamObserver;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -65,5 +70,23 @@ public class GrpcServerServiceImpl implements GrpcServerService {
                     .toList()
                 )
                 .build();
+    }
+
+    @Override
+    public void downloadFileFromGrpcServer(GrpcServerRequest request, StreamObserver<FileChunk> responseObserver) {
+        try (FileInputStream fis = new FileInputStream("D:\\tmp\\tmp.txt")) { // 임시 하드코딩
+            byte[] buffer = new byte[4096];
+            int bytesRead;
+
+            while ((bytesRead = fis.read(buffer)) != -1) {
+                FileChunk chunk = FileChunk.newBuilder()
+                    .setData(ByteString.copyFrom(buffer, 0, bytesRead))
+                    .build();
+                responseObserver.onNext(chunk);
+            }
+            responseObserver.onCompleted();
+        } catch (IOException e) {
+            responseObserver.onError(e);
+        }
     }
 }
