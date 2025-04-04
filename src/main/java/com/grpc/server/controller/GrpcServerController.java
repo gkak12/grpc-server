@@ -56,7 +56,7 @@ public class GrpcServerController extends GrpcServerServiceGrpc.GrpcServerServic
 
             @Override
             public void onError(Throwable throwable) {
-                log.info("grpc-server | GrpcServerController uploadFileToGrpcServer is failed.");
+                log.info("grpc-server | gRPC stream error: " + throwable.getMessage());
             }
         };
     }

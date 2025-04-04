@@ -9,6 +9,7 @@ import com.grpc.server.UploadFileChunk;
 import com.grpc.server.domain.GrpcServerObject;
 import com.grpc.server.mapper.GrpcMapper;
 import com.grpc.server.service.GrpcServerService;
+import io.grpc.Status;
 import io.grpc.stub.StreamObserver;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -88,32 +89,34 @@ public class GrpcServerServiceImpl implements GrpcServerService {
                 Files.createDirectories(path.getParent());
                 out = Files.newOutputStream(path);
             }
+
             out.write(uploadFileChunk.getData().toByteArray());
         } catch (IOException e) {
-            responseObserver.onNext(GrpcServerResponse.newBuilder()
-                .setMessage("Upload failed")
-                .build()
+            responseObserver.onError(
+                Status.INTERNAL.withDescription(e.getMessage()).asRuntimeException()
             );
-
-            responseObserver.onCompleted();
         }
     }
 
     @Override
     public void completeFileChunk(StreamObserver<GrpcServerResponse> responseObserver) {
         try {
-            if (out != null) out.close();
+            if (out != null){
+                out.close();
+                out = null;
+            }
+
             responseObserver.onNext(GrpcServerResponse.newBuilder()
                 .setMessage("Upload successful")
                 .build()
             );
+
+            responseObserver.onCompleted();
         } catch (IOException e) {
-            responseObserver.onNext(GrpcServerResponse.newBuilder()
-                .setMessage("Failed to close file")
-                .build()
+            responseObserver.onError(
+                Status.INTERNAL.withDescription(e.getMessage()).asRuntimeException()
             );
         }
-        responseObserver.onCompleted();
     }
 
     @Override
