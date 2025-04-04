@@ -1,10 +1,7 @@
 package com.grpc.server.controller;
 
 import com.google.protobuf.Empty;
-import com.grpc.server.FileChunk;
-import com.grpc.server.GrpcServerRequest;
-import com.grpc.server.GrpcServerResponse;
-import com.grpc.server.GrpcServerServiceGrpc;
+import com.grpc.server.*;
 import com.grpc.server.service.GrpcServerService;
 import io.grpc.stub.StreamObserver;
 import lombok.RequiredArgsConstructor;
@@ -43,7 +40,29 @@ public class GrpcServerController extends GrpcServerServiceGrpc.GrpcServerServic
     }
 
     @Override
-    public void downloadFileFromGrpcServer(GrpcServerRequest request, StreamObserver<FileChunk> responseObserver) {
+    public StreamObserver<UploadFileChunk> uploadFileToGrpcServer(StreamObserver<GrpcServerResponse> responseObserver) {
+        log.info("grpc-server | GrpcServerController uploadFileToGrpcServer is called.");
+
+        return new StreamObserver<UploadFileChunk>() {
+            @Override
+            public void onNext(UploadFileChunk uploadFileChunk) {
+                grpcServerService.uploadFileChunk(uploadFileChunk, responseObserver);
+            }
+
+            @Override
+            public void onCompleted() {
+                grpcServerService.completeFileChunk(responseObserver);
+            }
+
+            @Override
+            public void onError(Throwable throwable) {
+                log.info("grpc-server | GrpcServerController uploadFileToGrpcServer is failed.");
+            }
+        };
+    }
+
+    @Override
+    public void downloadFileFromGrpcServer(GrpcServerRequest request, StreamObserver<DownloadFileChunk> responseObserver) {
         log.info("grpc-server | GrpcServerController downloadFileFromGrpcServer is called.");
 
         grpcServerService.downloadFileFromGrpcServer(request, responseObserver);

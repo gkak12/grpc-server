@@ -2,9 +2,10 @@ package com.grpc.server.service.impl;
 
 import com.google.protobuf.ByteString;
 import com.google.protobuf.Empty;
-import com.grpc.server.FileChunk;
+import com.grpc.server.DownloadFileChunk;
 import com.grpc.server.GrpcServerRequest;
 import com.grpc.server.GrpcServerResponse;
+import com.grpc.server.UploadFileChunk;
 import com.grpc.server.domain.GrpcServerObject;
 import com.grpc.server.mapper.GrpcMapper;
 import com.grpc.server.service.GrpcServerService;
@@ -15,6 +16,10 @@ import org.springframework.stereotype.Service;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 
@@ -24,6 +29,8 @@ import java.util.List;
 public class GrpcServerServiceImpl implements GrpcServerService {
 
     private final GrpcMapper grpcMapper;
+    private OutputStream out;
+    private String fileName;
 
     @Override
     public GrpcServerResponse findNameFromGrpcServer(GrpcServerRequest request) {
@@ -73,13 +80,50 @@ public class GrpcServerServiceImpl implements GrpcServerService {
     }
 
     @Override
-    public void downloadFileFromGrpcServer(GrpcServerRequest request, StreamObserver<FileChunk> responseObserver) {
+    public void uploadFileChunk(UploadFileChunk uploadFileChunk, StreamObserver<GrpcServerResponse> responseObserver) {
+        try {
+            if (out == null) {
+                fileName = uploadFileChunk.getFileName();
+                Path path = Paths.get("D:\\tmp", fileName);
+                Files.createDirectories(path.getParent());
+                out = Files.newOutputStream(path);
+            }
+            out.write(uploadFileChunk.getData().toByteArray());
+        } catch (IOException e) {
+            responseObserver.onNext(GrpcServerResponse.newBuilder()
+                .setMessage("Upload failed")
+                .build()
+            );
+
+            responseObserver.onCompleted();
+        }
+    }
+
+    @Override
+    public void completeFileChunk(StreamObserver<GrpcServerResponse> responseObserver) {
+        try {
+            if (out != null) out.close();
+            responseObserver.onNext(GrpcServerResponse.newBuilder()
+                .setMessage("Upload successful")
+                .build()
+            );
+        } catch (IOException e) {
+            responseObserver.onNext(GrpcServerResponse.newBuilder()
+                .setMessage("Failed to close file")
+                .build()
+            );
+        }
+        responseObserver.onCompleted();
+    }
+
+    @Override
+    public void downloadFileFromGrpcServer(GrpcServerRequest request, StreamObserver<DownloadFileChunk> responseObserver) {
         try (FileInputStream fis = new FileInputStream("D:\\tmp\\tmp.txt")) { // 임시 하드코딩
             byte[] buffer = new byte[4096];
             int bytesRead;
 
             while ((bytesRead = fis.read(buffer)) != -1) {
-                FileChunk chunk = FileChunk.newBuilder()
+                DownloadFileChunk chunk = DownloadFileChunk.newBuilder()
                     .setData(ByteString.copyFrom(buffer, 0, bytesRead))
                     .build();
                 responseObserver.onNext(chunk);
