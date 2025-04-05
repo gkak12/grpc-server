@@ -30,8 +30,6 @@ import java.util.List;
 public class GrpcServerServiceImpl implements GrpcServerService {
 
     private final GrpcMapper grpcMapper;
-    private OutputStream out;
-    private String fileName;
 
     @Override
     public GrpcServerResponse findNameFromGrpcServer(GrpcServerRequest request) {
@@ -81,42 +79,54 @@ public class GrpcServerServiceImpl implements GrpcServerService {
     }
 
     @Override
-    public void uploadFileChunk(UploadFileChunk uploadFileChunk, StreamObserver<GrpcServerResponse> responseObserver) {
-        try {
-            if (out == null) {
-                fileName = uploadFileChunk.getFileName();
-                Path path = Paths.get("D:\\tmp", fileName);
-                Files.createDirectories(path.getParent());
-                out = Files.newOutputStream(path);
+    public StreamObserver<UploadFileChunk> uploadFileToGrpcServer(StreamObserver<GrpcServerResponse> responseObserver) {
+        return new StreamObserver<>() {
+            private OutputStream out;
+            private String fileName;
+
+            @Override
+            public void onNext(UploadFileChunk uploadFileChunk) {
+                try {
+                    if (out == null) {
+                        fileName = uploadFileChunk.getFileName();
+                        Path path = Paths.get("D:\\tmp", fileName); // 임시 하드코딩
+                        Files.createDirectories(path.getParent());
+                        out = Files.newOutputStream(path);
+                    }
+
+                    out.write(uploadFileChunk.getData().toByteArray());
+                } catch (IOException e) {
+                    responseObserver.onError(
+                        Status.INTERNAL.withDescription(e.getMessage()).asRuntimeException()
+                    );
+                }
             }
 
-            out.write(uploadFileChunk.getData().toByteArray());
-        } catch (IOException e) {
-            responseObserver.onError(
-                Status.INTERNAL.withDescription(e.getMessage()).asRuntimeException()
-            );
-        }
-    }
-
-    @Override
-    public void completeFileChunk(StreamObserver<GrpcServerResponse> responseObserver) {
-        try {
-            if (out != null){
-                out.close();
-                out = null;
+            @Override
+            public void onError(Throwable throwable) {
+                log.info("grpc-server | gRPC stream error: " + throwable.getMessage());
             }
 
-            responseObserver.onNext(GrpcServerResponse.newBuilder()
-                .setMessage("Upload successful")
-                .build()
-            );
+            @Override
+            public void onCompleted() {
+                try {
+                    if (out != null){
+                        out.close();
+                    }
 
-            responseObserver.onCompleted();
-        } catch (IOException e) {
-            responseObserver.onError(
-                Status.INTERNAL.withDescription(e.getMessage()).asRuntimeException()
-            );
-        }
+                    responseObserver.onNext(GrpcServerResponse.newBuilder()
+                        .setMessage("Upload successful")
+                        .build()
+                    );
+
+                    responseObserver.onCompleted();
+                } catch (IOException e) {
+                    responseObserver.onError(
+                        Status.INTERNAL.withDescription(e.getMessage()).asRuntimeException()
+                    );
+                }
+            }
+        };
     }
 
     @Override

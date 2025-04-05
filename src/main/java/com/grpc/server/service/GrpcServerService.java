@@ -12,7 +12,6 @@ public interface GrpcServerService {
     GrpcServerResponse findNameFromGrpcServer(GrpcServerRequest request);
     GrpcServerResponse findNamesFromGrpcServer(GrpcServerRequest request);
     GrpcServerResponse findObjectsFromGrpcServer(Empty empty);
-    void uploadFileChunk(UploadFileChunk uploadFileChunk, StreamObserver<GrpcServerResponse> responseObserver);
-    void completeFileChunk(StreamObserver<GrpcServerResponse> responseObserver);
+    StreamObserver<UploadFileChunk> uploadFileToGrpcServer(StreamObserver<GrpcServerResponse> responseObserver);
     void downloadFileFromGrpcServer(GrpcServerRequest request, StreamObserver<DownloadFileChunk> responseObserver);
 }

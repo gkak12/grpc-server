@@ -43,22 +43,7 @@ public class GrpcServerController extends GrpcServerServiceGrpc.GrpcServerServic
     public StreamObserver<UploadFileChunk> uploadFileToGrpcServer(StreamObserver<GrpcServerResponse> responseObserver) {
         log.info("grpc-server | GrpcServerController uploadFileToGrpcServer is called.");
 
-        return new StreamObserver<UploadFileChunk>() {
-            @Override
-            public void onNext(UploadFileChunk uploadFileChunk) {
-                grpcServerService.uploadFileChunk(uploadFileChunk, responseObserver);
-            }
-
-            @Override
-            public void onCompleted() {
-                grpcServerService.completeFileChunk(responseObserver);
-            }
-
-            @Override
-            public void onError(Throwable throwable) {
-                log.info("grpc-server | gRPC stream error: " + throwable.getMessage());
-            }
-        };
+        return grpcServerService.uploadFileToGrpcServer(responseObserver);
     }
 
     @Override
